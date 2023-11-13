@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/face", function (req, res) {
-    res.send({test : req.body});
+    res.send({test : req.query.text});
 });
 
 module.exports = router;
