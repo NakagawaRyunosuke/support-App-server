@@ -3,7 +3,7 @@ var router = express.Router();
 
 let messageJson = { message: "Hello Flutter!" };
 
-router.get("/message", (req, res) => {
+router.get("/", (req, res) => {
     res.send(messageJson);
 });
 
