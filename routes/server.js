@@ -7,6 +7,10 @@ router.get("/", (req, res) => {
     res.send(messageJson);
 });
 
+router.get("/test", (req, res) => {
+    res.send(`${process.env.TEST}`);
+});
+
 router.post("/face", function (req, res) {
     // const image = req.query.faceimage;
     // const uid = req.query.uid;
