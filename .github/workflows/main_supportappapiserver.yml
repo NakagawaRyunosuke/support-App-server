@@ -21,12 +21,14 @@ jobs:
         with:
           node-version: '18.x'
         
-      - name: create .env
-        run: |
-          touch .env
-          echo 'TEST_APP_API_KEY=${{secrets.TEST_APP_API_KEY}}' >> .env
+      # - name: create .env
+      #   run: |
+      #     touch .env
+      #     echo 'TEST_APP_API_KEY=${{secrets.TEST_APP_API_KEY}}' >> .env
 
       - name: npm install, build, and test
+        env:
+          TEST_APP_API_KEY: ${{secrets.TEST_APP_API_KEY}}
         run: |
           npm install
           npm run build --if-present
