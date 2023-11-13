@@ -8,7 +8,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/test", (req, res) => {
-    res.send(`${process.env.TEST}`);
+    res.send(`${process.env.TEST_TEXT_WORD}`);
 });
 
 router.post("/face", function (req, res) {
