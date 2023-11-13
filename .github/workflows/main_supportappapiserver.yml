@@ -19,7 +19,7 @@ jobs:
       - name: create env file
         run: |
           touch .env
-          echo TEST_TEXT_WORD=${{ secrets.TEST_TEXT_WORD }} >> .env
+          echo TEST_TEXT_WORD=${{ env.TEST_TEXT_WORD }} >> .env
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
