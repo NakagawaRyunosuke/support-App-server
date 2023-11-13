@@ -14,9 +14,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v4
       env:
         TEST_APP_API_KEY: ${{secrets.TEST_APP_API_KEY}}
-      - uses: actions/checkout@v4
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
