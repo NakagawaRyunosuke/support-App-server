@@ -1,5 +1,5 @@
 const express = require("express");
-console.log(require('dotenv').config());
+console.log("error="+require('dotenv').config());
 var router = express.Router();
 
 let messageJson = { message: "サーバー動いてるよ" };
