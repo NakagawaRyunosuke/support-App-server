@@ -1,4 +1,5 @@
 const express = require("express");
+require('dotenv').config();
 var router = express.Router();
 
 let messageJson = { message: "サーバー動いてるよ" };
@@ -8,7 +9,8 @@ router.get("/", (req, res) => {
 });
 
 router.get("/test", (req, res) => {
-    res.send(`${process.env.TEST_TEXT_WORD}`);
+    const test = process.env.TEST_TEXT_WORD;
+    res.send(test);
 });
 
 router.post("/face", function (req, res) {
