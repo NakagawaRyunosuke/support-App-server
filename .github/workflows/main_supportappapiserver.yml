@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  env:
+  - env:
     TEST_APP_API_KEY: ${{secrets.TEST_APP_API_KEY}}
   build:
     runs-on: ubuntu-latest
