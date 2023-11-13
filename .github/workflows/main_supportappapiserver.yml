@@ -8,10 +8,10 @@ on:
     branches:
       - main
   workflow_dispatch:
+  env:
+    TEST_APP_API_KEY: ${{secrets.TEST_APP_API_KEY}}
 
 jobs:
-  - env:
-    TEST_APP_API_KEY: ${{secrets.TEST_APP_API_KEY}}
   build:
     runs-on: ubuntu-latest
 
