@@ -9,6 +9,7 @@ var usersRouter = require('./routes/users');
 var serverRouter = require('./routes/server');
 
 var app = express();
+console.log(process.env.TEST_APP_API_KEY)
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
