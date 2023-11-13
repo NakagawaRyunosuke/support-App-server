@@ -9,11 +9,11 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  TEST: ${{secrets.TEST}}
-
 jobs:
   build:
+    env:
+      TEST: ${{secrets.TEST}}
+
     runs-on: ubuntu-latest
 
     steps:
