@@ -9,6 +9,9 @@ on:
       - main
   workflow_dispatch:
 
+env:
+  TEST_TEXT_WORD: ${{secrets.TEST_TEXT_WORD}}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,9 +25,8 @@ jobs:
           node-version: '18.x'
 
       - name: npm install, build, and test
-        env:
-          TEST: ${{ env.TEST }}
         run: |
+          echo "this is env=${{secrets.TEST_TEXT_WORD}}"
           npm install
           npm run build --if-present
           npm run test --if-present
