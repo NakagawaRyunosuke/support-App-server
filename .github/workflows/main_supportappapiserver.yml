@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: '18.x'
         env:
-          TEST_APP_API_KEY: ${{secrets.TEST_APP_API_KEY}}
+          - TEST_APP_API_KEY: ${{secrets.TEST_APP_API_KEY}}
 
       - name: npm install, build, and test
         run: |
