@@ -20,17 +20,12 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
-        
-      # - name: create .env
-      #   run: |
-      #     touch .env
-      #     echo 'TEST_APP_API_KEY=${{secrets.TEST_APP_API_KEY}}' >> .env
 
       - name: npm install, build, and test
-        # env:
-        #   TEST_APP_API_KEY: ${{secrets.TEST_APP_API_KEY}}
+        env:
+          TEST_WORD: ${{secrets.TEST_APP_API_KEY}}
         run: |
-          echo "TEST_WORD=${{secrets.TEST_APP_API_KEY}} >> .env"
+          npm install
           npm run build --if-present
           npm run test --if-present
 
