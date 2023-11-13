@@ -9,15 +9,17 @@ on:
       - main
   workflow_dispatch:
 
-env:
-  TEST_TEXT_WORD: ${{secrets.TEST_TEXT_WORD}}
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: create env file
+        run: |
+          touch .env
+          echo ENGINE_API_KEY=${{ secrets.ENGINE_API_KEY }} >> .env
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
