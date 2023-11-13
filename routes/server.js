@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
 });
 
 router.get("/test", (req, res) => {
-    const test = process.env.TEST_APP_API_KEY;
+    const test ={text : process.env.TEST_APP_API_KEY};
     res.send(test);
 });
 
