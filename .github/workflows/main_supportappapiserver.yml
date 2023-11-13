@@ -22,11 +22,11 @@ jobs:
           node-version: '18.x'
 
       - name: npm install, build, and test
-      - run: |
+        run: |
           npm install
           npm run build --if-present
           npm run test --if-present
-        env:
+      - env:
           TEST_APP_API_KEY: ${{secrets.TEST_APP_API_KEY}}
 
       - name: Zip artifact for deployment
