@@ -24,12 +24,10 @@ jobs:
       - name: npm install, build, and test
         run: |
           touch .env
-          echo "TEST_APP_API_KEY: $TESTNAME" >> .env
+          echo "TEST_APP_API_KEY: ${{secrets.test_app_api_key}}" >> .env
           npm install
           npm run build --if-present
           npm run test --if-present
-        env:
-          TEST_APP_API_KEY: ${{secrets.TEST_APP_API_KEY}}
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
