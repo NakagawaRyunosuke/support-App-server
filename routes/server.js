@@ -3,15 +3,8 @@ require('dotenv').config();
 console.log(require('dotenv').config());
 var router = express.Router();
 
-let messageJson = { message: "サーバー動いてるよ" };
-
 router.get("/", (req, res) => {
-    res.send(messageJson);
-});
-
-router.get("/test", (req, res) => {
-    const test ={"test" : "key = " + process.env.TEST_WORD};
-    res.send(test);
+    res.send({ message: "サーバー動いてるよ" });
 });
 
 router.post("/face", function (req, res) {
