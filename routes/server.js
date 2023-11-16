@@ -41,11 +41,10 @@ async function imageAnalys(imageData){
                 );
             });
         }
+        return responses;
     } catch (error) {
         console.error(error.response || error);
     }
-    return responses;
-    
 }
 
 router.get("/", (req, res) => {
