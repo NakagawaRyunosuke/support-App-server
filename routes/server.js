@@ -2,12 +2,12 @@ const express = require("express");
 require('dotenv').config();
 var router = express.Router();
 const axios = require('axios');
+let result;
 
 async function imageAnalys(imageData){
     const apiKey = process.env.VISION_API_KEY;
     const apiEndpoint = process.env.VISION_API_ENDPOINT;
     const visionApiUrl = `${apiEndpoint}?key=${apiKey}`
-    let result;
     if (!apiKey) {
         console.log("Env 'VISION_API_KEY' must be set.");
         process.exit(1);
@@ -54,6 +54,7 @@ router.get("/", (req, res) => {
 
 router.post("/face", function (req, res) {
     const imageData = req.body.imageData; //画像のbase64変換した文字列をもらう
+    console.log(imageData);
     //const uid = req.query.uid;
 
     // Cloud Vision APIの処理かく
