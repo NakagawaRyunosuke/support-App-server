@@ -53,8 +53,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/face", function (req, res) {
-    const imageData = req.query.faceimage; //画像のbase64変換した文字列をもらう
-    console.log(imageData);
+    const imageData = req.query.imageData; //画像のbase64変換した文字列をもらう
     //const uid = req.query.uid;
 
     // Cloud Vision APIの処理かく
