@@ -35,11 +35,11 @@ async function imageAnalys(imageData){
     
         if (result.data && result.data.responses) {
             responses = result.data.responses;
-        //   responses.forEach((response) => {
-        //     response.landmarkAnnotations.forEach((annotation) =>
-        //       console.log(annotation)
-        //     );
-        //   });
+            responses.forEach((response) => {
+                response.landmarkAnnotations.forEach((annotation) =>
+                    console.log(annotation)
+                );
+            });
         }
     } catch (error) {
         console.error(error.response || error);
@@ -54,12 +54,13 @@ router.get("/", (req, res) => {
 
 router.post("/face", function (req, res) {
     const imageData = req.query.imageData; //画像のbase64変換した文字列をもらう
+    console.log(imageData);
     //const uid = req.query.uid;
 
     // Cloud Vision APIの処理かく
     // APIにbase64文字列を渡す&optionで表情分析を指定する
     const result = imageAnalys(imageData);
-    res.send({"結果":result})
+    res.send({"結果":"Success"})
 
     // uid使ってFirestoreのサブコレクション(体調データ)にbase64文字列を保存&感情情報!
 });
