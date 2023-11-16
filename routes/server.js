@@ -2,7 +2,6 @@ const express = require("express");
 require('dotenv').config();
 var router = express.Router();
 const axios = require('axios');
-let result;
 
 async function imageAnalys(imageData){
     const apiKey = process.env.VISION_API_KEY;
@@ -31,17 +30,19 @@ async function imageAnalys(imageData){
 
     try {
         const result = await axios.post(visionApiUrl, options);
+        let resultList;
         console.log("Request success!");
     
         if (result.data && result.data.responses) {
             responses = result.data.responses;
             responses.forEach((response) => {
                 response.landmarkAnnotations.forEach((annotation) =>
-                    console.log(annotation)
+                    console.log(annotation),
+                    resultList.push(annotation)
                 );
             });
         }
-        return responses;
+        return resultList;
     } catch (error) {
         console.error(error.response || error);
     }
@@ -58,8 +59,8 @@ router.post("/face", function (req, res) {
 
     // Cloud Vision APIの処理かく
     // APIにbase64文字列を渡す&optionで表情分析を指定する
-    result = imageAnalys(imageData);
-    res.send({"結果":result});
+    const resultData = imageAnalys(imageData);
+    res.send({"結果":resultData});
 
     // uid使ってFirestoreのサブコレクション(体調データ)にbase64文字列を保存&感情情報!
 });
