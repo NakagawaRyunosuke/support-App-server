@@ -50,7 +50,6 @@ async function imageAnalys(imageData){
 
 router.get("/", (req, res) => {
     res.send({ message: "サーバー動いてるよ" });
-    imageAnalys();
 });
 
 router.post("/face", function (req, res) {
