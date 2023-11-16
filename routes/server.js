@@ -54,14 +54,13 @@ router.get("/", (req, res) => {
 
 router.post("/face", function (req, res) {
     console.log("success");
-    const imageData = req.query.imageData; //画像のbase64変換した文字列をもらう
-    console.log(imageData);
+    //const imageData = req.body.imageData; //画像のbase64変換した文字列をもらう
     //const uid = req.query.uid;
 
     // Cloud Vision APIの処理かく
     // APIにbase64文字列を渡す&optionで表情分析を指定する
-    const result = imageAnalys(imageData);
-    res.send({"結果":"Success"})
+    //imageAnalys(imageData);
+    res.send({"結果":req.body.imageData});
 
     // uid使ってFirestoreのサブコレクション(体調データ)にbase64文字列を保存&感情情報!
 });
