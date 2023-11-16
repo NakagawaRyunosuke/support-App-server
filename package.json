@@ -6,6 +6,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "asynckit": "^0.4.0",
     "axios": "^1.6.2",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
@@ -14,6 +15,7 @@
     "express": "~4.16.1",
     "firebase": "^10.6.0",
     "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1"
   }
