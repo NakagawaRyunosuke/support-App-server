@@ -3,7 +3,7 @@ const { initializeApp } = require('firebase-admin/app');
 require('dotenv').config();
 // Initialize Firebase
 
-FIREBASE_SERVICE_ACCOUNT = {
+const firebaseServiceAccount = {
     "type": process.env.TYPE,
     "project_id": process.env.PROJECT_ID,
     "private_key_id": process.env.PRIVATE_KEY_ID,
@@ -18,7 +18,7 @@ FIREBASE_SERVICE_ACCOUNT = {
 }
 
 // const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-const serviceAccount = JSON.parse(FIREBASE_SERVICE_ACCOUNT);
+const serviceAccount = firebaseServiceAccount;
 const app = initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
