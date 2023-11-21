@@ -18,11 +18,11 @@ const firebaseServiceAccount = {
 }
 
 // const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-// const serviceAccount = firebaseServiceAccount;
-// const app = initializeApp({
-//   credential: admin.credential.cert(serviceAccount),
-// });
-// const db = admin.firestore();
+const serviceAccount = firebaseServiceAccount;
+const app = initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+const db = admin.firestore();
 
 const express = require("express");
 require('dotenv').config();
