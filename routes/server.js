@@ -1,3 +1,13 @@
+const admin = require('firebase-admin');
+const { initializeApp } = require('firebase-admin/app');
+require('dotenv').config();
+// Initialize Firebase
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+const app = initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
+const db = admin.firestore();
+
 const express = require("express");
 require('dotenv').config();
 var router = express.Router();
@@ -42,7 +52,7 @@ async function imageAnalys(imageData){
 }
 
 router.get("/", (req, res) => {
-    res.send({ message: "サーバー動いてるよ" });
+    res.send({ message: "サーバー動いてるよ"});
 });
 
 router.post("/face", function (req, res) {
@@ -57,6 +67,47 @@ router.post("/face", function (req, res) {
     });
 
     // uid使ってFirestoreのサブコレクション(体調データ)にbase64文字列を保存&感情情報!
+});
+
+async function setImageResult(uid,emotionResult){
+  try{
+    const docRef = db.collection('Users').doc(uid).collection("Image");
+    const result = await docRef.add({
+      timestamp: admin.firestore.FieldValue.serverTimestamp(),
+      emotionResult: emotionResult,
+    });
+  }catch(e){
+    console.error('Error adding document: ', e);
+  }
+}
+
+async function getImageUrl(uid){
+  try{
+    const docRef = db.collection('Users').doc(uid);
+    const doc = await docRef.get();
+
+    if (doc.exists) {
+      const imageUrl = doc.data().imageUrl;
+      return imageUrl;
+    } else {
+      console.log('No such document!');
+      return null;
+    }
+  }catch(e){
+    console.error('Error getting document:', e);
+    return null;
+  }
+}
+
+router.post("/test",async function(req,res){
+    const imageData = req.body.imageData;
+    const uid = req.body.uid;
+    // APIにbase64文字列を渡し、結果をレスポンスで返却してます
+    imageAnalys(imageData).then((value) => {
+      const resData = JSON.stringify(value, null, 4);
+      setImageResult(uid, resData);
+      res.send(`結果:${uid}`);
+    });
 });
 
 module.exports = router;
