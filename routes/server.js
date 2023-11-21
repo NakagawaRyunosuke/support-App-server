@@ -106,7 +106,7 @@ router.post("/test",async function(req,res){
     imageAnalys(imageData).then((value) => {
       const resData = JSON.stringify(value, null, 4);
       setImageResult(uid, resData);
-      res.send(`結果:${uid}`);
+      res.send(`結果:${resData}`);
     });
 });
 
