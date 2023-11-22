@@ -20,9 +20,9 @@ const firebaseServiceAccount = {
     "universe_domain": process.env.UNIVERSE_DOMAIN,
 }
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-// const serviceAccount = firebaseServiceAccount;
-const app = initializeApp({
+// const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+const serviceAccount = firebaseServiceAccount;
+initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 const db = admin.firestore();
@@ -101,8 +101,8 @@ router.post("/diary", async function (req, res) {
   const voiceURL = "Users/<uid>/voice.m4a"; 
   const voiceText = "おはよう、今日は寒くて関節が痛いです。最近は綺麗な花を見つけたので散歩も楽しいです"; 
 
-  //const emotionResult = await imageAnalys(imageURL); // APIに画像のURLを渡し、結果をレスポンスで返却してます
-  //setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText);  // uid使ってFirestoreのサブコレクション(Diary)に保存
+  const emotionResult = await imageAnalys(imageURL); // APIに画像のURLを渡し、結果をレスポンスで返却してます
+  setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText);  // uid使ってFirestoreのサブコレクション(Diary)に保存
   
   res.send("Success!");
 });
