@@ -73,57 +73,57 @@ async function imageAnalys(imageURL){
     }
 }
 
-async function speechToText(voiceURL){
-  const voiceApiKey = process.env.VOICE_API_KEY;
-  const voiceApiEndpoint = process.env.VOICE_API_ENDPOINT;
-  const voiceApiUrl = `${voiceApiEndpoint}?key=${voiceApiKey}`;
+// async function speechToText(voiceURL){
+//   const voiceApiKey = process.env.VOICE_API_KEY;
+//   const voiceApiEndpoint = process.env.VOICE_API_ENDPOINT;
+//   const voiceApiUrl = `${voiceApiEndpoint}?key=${voiceApiKey}`;
 
-  if (!voiceApiKey) {
-    console.log("Env 'VISION_API_KEY' must be set.");
-    process.exit(1);
-  }
+//   if (!voiceApiKey) {
+//     console.log("Env 'VISION_API_KEY' must be set.");
+//     process.exit(1);
+//   }
 
-  const options = {
-    config: {
-      encoding: "LINEAR16",
-      sampleRateHertz: 44100,
-      languageCode: "ja-JP",
-    },
-    audio: {
-      uri: voiceURL
-    }
-  }
+//   const options = {
+//     config: {
+//       encoding: "LINEAR16",
+//       sampleRateHertz: 44100,
+//       languageCode: "ja-JP",
+//     },
+//     audio: {
+//       uri: voiceURL
+//     }
+//   }
 
-  try{
-    let resultText = "";
-    const result = await axios.post(voiceApiUrl, options);
-    if (result.data && result.data.results) {
-      const responses = result.data.results;
-      for(let i = 0; i < responses.length; i ++){
-        if(i >= 1){
-          resultText = resultText + "。" + responses[i]["alternatives"][0]["transcript"];
-        }else{
-          resultText = responses[i]["alternatives"][0]["transcript"];
-        }
-      }
-      resultText = resultText + "。";
-      return resultText;
-    }else{
-      return "データがありません"
-    }
-  } catch(error){
-    console.error(error.response || error);
-  }
-}
+//   try{
+//     let resultText = "";
+//     const result = await axios.post(voiceApiUrl, options);
+//     if (result.data && result.data.results) {
+//       const responses = result.data.results;
+//       for(let i = 0; i < responses.length; i ++){
+//         if(i >= 1){
+//           resultText = resultText + "。" + responses[i]["alternatives"][0]["transcript"];
+//         }else{
+//           resultText = responses[i]["alternatives"][0]["transcript"];
+//         }
+//       }
+//       resultText = resultText + "。";
+//       return resultText;
+//     }else{
+//       return "データがありません"
+//     }
+//   } catch(error){
+//     console.error(error.response || error);
+//   }
+// }
 
-//GS://形式に変換
-function urlChangeGS(url){
-  const deleteStartIndex = url.indexOf("/o/");
-  const deleteEndIndex = url.indexOf("?");
-  const text = url.slice(deleteStartIndex + 3, deleteEndIndex);
-  const result = process.env.GS_URL + text.replace(/%2F/g, "/");
-  return result;
-}
+// GS://形式に変換
+// function urlChangeGS(url){
+//   const deleteStartIndex = url.indexOf("/o/");
+//   const deleteEndIndex = url.indexOf("?");
+//   const text = url.slice(deleteStartIndex + 3, deleteEndIndex);
+//   const result = process.env.GS_URL + text.replace(/%2F/g, "/");
+//   return result;
+// }
 
 async function setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText){
   try{
@@ -147,13 +147,14 @@ router.get("/", (req, res) => {
 
 router.post("/diary", async function (req, res) {
   const imageURL = req.body.imageURL; //画像のURLもらう
-  const voiceURL = req.body.voiceURL; //音声のURLもらう
-  const uid = req.body.uid; //uidもらう
+  //const voiceURL = req.body.voiceURL; //音声のURLもらう
+  //const uid = req.body.uid; //uidもらう
 
   const emotionResult = await imageAnalys(urlChangeGS(imageURL)); // APIに画像のURLを渡し、結果をレスポンスで返却してます
-  const voiceText = await speechToText(urlChangeGS(voiceURL)); //音声の文字起こし
-  const statusMessage = await setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText);  // uid使ってFirestoreのサブコレクション(Diary)に保存
-  res.send({"status": statusMessage});
+  //const voiceText = await speechToText(urlChangeGS(voiceURL)); //音声の文字起こし
+  //const statusMessage = await setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText);  // uid使ってFirestoreのサブコレクション(Diary)に保存
+  //res.send({"status": statusMessage});
+  res.send("Done");
 });
 
 module.exports = router;
