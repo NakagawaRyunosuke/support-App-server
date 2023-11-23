@@ -20,8 +20,8 @@ const firebaseServiceAccount = {
     "universe_domain": process.env.UNIVERSE_DOMAIN,
 }
 
-// const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-const serviceAccount = firebaseServiceAccount;
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+//const serviceAccount = firebaseServiceAccount;
 initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -29,10 +29,10 @@ const db = admin.firestore();
 
 //受け取った画像URLをもとに感情データ取得
 async function imageAnalys(imageURL){
-  const apiKey = process.env.VISION_API_KEY;
-  const apiEndpoint = process.env.VISION_API_ENDPOINT;
-  const visionApiUrl = `${apiEndpoint}?key=${apiKey}`
-  if (!apiKey) {
+  const visionApiKey = process.env.VISION_API_KEY;
+  const visionApiEndpoint = process.env.VISION_API_ENDPOINT;
+  const visionApiUrl = `${visionApiEndpoint}?key=${visionApiKey}`;
+  if (!visionApiKey) {
       console.log("Env 'VISION_API_KEY' must be set.");
       process.exit(1);
   }
@@ -57,7 +57,6 @@ async function imageAnalys(imageURL){
 
     try {
       const result = await axios.post(visionApiUrl, options);
-      console.log("Request success!");
   
       if (result.data && result.data.responses) {
         const responses = result.data.responses;
@@ -74,6 +73,58 @@ async function imageAnalys(imageURL){
     }
 }
 
+async function speechToText(voiceURL){
+  const voiceApiKey = process.env.VOICE_API_KEY;
+  const voiceApiEndpoint = process.env.VOICE_API_ENDPOINT;
+  const voiceApiUrl = `${voiceApiEndpoint}?key=${voiceApiKey}`;
+
+  if (!voiceApiKey) {
+    console.log("Env 'VISION_API_KEY' must be set.");
+    process.exit(1);
+  }
+
+  const options = {
+    config: {
+      encoding: "LINEAR16",
+      sampleRateHertz: 44100,
+      languageCode: "ja-JP",
+    },
+    audio: {
+      uri: voiceURL
+    }
+  }
+
+  try{
+    let resultText = "";
+    const result = await axios.post(voiceApiUrl, options);
+    if (result.data && result.data.results) {
+      const responses = result.data.results;
+      for(let i = 0; i < responses.length; i ++){
+        if(i >= 1){
+          resultText = resultText + "。" + responses[i]["alternatives"][0]["transcript"];
+        }else{
+          resultText = responses[i]["alternatives"][0]["transcript"];
+        }
+      }
+      resultText = resultText + "。";
+      return resultText;
+    }else{
+      return "データがありません"
+    }
+  } catch(error){
+    console.error(error.response || error);
+  }
+}
+
+//GS://形式に変換
+function urlChangeGS(url){
+  const deleteStartIndex = url.indexOf("/o/");
+  const deleteEndIndex = url.indexOf("?");
+  const text = url.slice(deleteStartIndex + 3, deleteEndIndex);
+  const result = process.env.GS_URL + text.replace(/%2F/g, "/");
+  return result;
+}
+
 async function setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText){
   try{
     const docRef = db.collection('Users').doc(uid).collection("Diary");
@@ -84,8 +135,9 @@ async function setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText){
       voiceURL: voiceURL,
       voiceText: voiceText
     });
+    return "Save is Done."
   }catch(e){
-    console.error('Error adding document: ', e);
+    return 'Error adding document: ' + e;
   }
 }
 
@@ -95,16 +147,13 @@ router.get("/", (req, res) => {
 
 router.post("/diary", async function (req, res) {
   const imageURL = req.body.imageURL; //画像のURLもらう
-  //const voiceURL = req.body.voiceURL; //音声のURLもらう
-  //const voiceText = req.body.voiceText; //音声文字起こしテキストもらう
+  const voiceURL = req.body.voiceURL; //音声のURLもらう
   const uid = req.body.uid; //uidもらう
-  const voiceURL = "Users/<uid>/voice.m4a"; 
-  const voiceText = "おはよう、今日は寒くて関節が痛いです。最近は綺麗な花を見つけたので散歩も楽しいです"; 
 
-  const emotionResult = await imageAnalys(imageURL); // APIに画像のURLを渡し、結果をレスポンスで返却してます
-  setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText);  // uid使ってFirestoreのサブコレクション(Diary)に保存
-  
-  res.send("Success!");
+  const emotionResult = await imageAnalys(urlChangeGS(imageURL)); // APIに画像のURLを渡し、結果をレスポンスで返却してます
+  const voiceText = await speechToText(urlChangeGS(voiceURL)); //音声の文字起こし
+  const statusMessage = await setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText);  // uid使ってFirestoreのサブコレクション(Diary)に保存
+  res.send({"status": statusMessage});
 });
 
 module.exports = router;
