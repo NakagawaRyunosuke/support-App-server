@@ -20,8 +20,8 @@ const firebaseServiceAccount = {
     "universe_domain": process.env.UNIVERSE_DOMAIN,
 }
 
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-// const serviceAccount = firebaseServiceAccount;
+// const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+const serviceAccount = firebaseServiceAccount;
 initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
