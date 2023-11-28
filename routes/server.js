@@ -20,8 +20,8 @@ const firebaseServiceAccount = {
     "universe_domain": process.env.UNIVERSE_DOMAIN,
 }
 
-// const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-const serviceAccount = firebaseServiceAccount;
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+// const serviceAccount = firebaseServiceAccount;
 initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -59,7 +59,7 @@ async function imageAnalys(imageURL){
       const result = await axios.post(visionApiUrl, options);
       if (result.data && result.data.responses) {
         const responses = result.data.responses;
-        if(responses[0].isNotEmpty){
+        if(responses[0]["faceAnnotations"]){
           const emotionData = {
             "joyLikelihood": responses[0]["faceAnnotations"][0]["joyLikelihood"],
             "sorrowLikelihood": responses[0]["faceAnnotations"][0]["sorrowLikelihood"],
