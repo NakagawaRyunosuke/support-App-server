@@ -155,6 +155,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/diary", async function (req, res) {
+  console.log(req.body)
   const imageURL = req.body.imageURL; //画像のURLもらう
   const voiceURL = req.body.voiceURL; //音声のURLもらう
   const uid = req.body.uid; //uidもらう
