@@ -26,6 +26,7 @@ initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 const db = admin.firestore();
+db.settings({ ignoreUndefinedProperties: true });
 
 //受け取った画像URLをもとに感情データ取得
 async function imageAnalys(imageURL){
