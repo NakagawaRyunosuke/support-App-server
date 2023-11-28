@@ -20,8 +20,8 @@ const firebaseServiceAccount = {
     "universe_domain": process.env.UNIVERSE_DOMAIN,
 }
 
-//const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-const serviceAccount = firebaseServiceAccount;
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+// const serviceAccount = firebaseServiceAccount;
 initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -57,16 +57,24 @@ async function imageAnalys(imageURL){
 
     try {
       const result = await axios.post(visionApiUrl, options);
-  
       if (result.data && result.data.responses) {
         const responses = result.data.responses;
-        const emotionData = {
-          "joyLikelihood": responses[0]["faceAnnotations"][0]["joyLikelihood"],
-          "sorrowLikelihood": responses[0]["faceAnnotations"][0]["sorrowLikelihood"],
-          "angerLikelihood": responses[0]["faceAnnotations"][0]["angerLikelihood"],
-          "surpriseLikelihood": responses[0]["faceAnnotations"][0]["surpriseLikelihood"],
+        if(responses[0].isNotEmpty){
+          const emotionData = {
+            "joyLikelihood": responses[0]["faceAnnotations"][0]["joyLikelihood"],
+            "sorrowLikelihood": responses[0]["faceAnnotations"][0]["sorrowLikelihood"],
+            "angerLikelihood": responses[0]["faceAnnotations"][0]["angerLikelihood"],
+            "surpriseLikelihood": responses[0]["faceAnnotations"][0]["surpriseLikelihood"],
+          }
+          return emotionData;
+        }else{
+          return {
+            "joyLikelihood": "検知できませんでした",
+            "sorrowLikelihood": "検知できませんでした",
+            "angerLikelihood": "検知できませんでした",
+            "surpriseLikelihood": "検知できませんでした",
+          }
         }
-        return emotionData;
       }
     } catch (error) {
       console.error(error.response || error);
@@ -135,9 +143,9 @@ async function setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText){
       voiceURL: voiceURL,
       voiceText: voiceText
     });
-    return "Save is Done."
+    return {"code":"0","Message":"Save is Done."}
   }catch(e){
-    return 'Error adding document: ' + e;
+    return {"code":"1","Message":`Error adding document: ${e}`};
   }
 }
 
@@ -153,7 +161,7 @@ router.post("/diary", async function (req, res) {
   const emotionResult = await imageAnalys(urlChangeGS(imageURL)); // APIに画像のURLを渡し、結果をレスポンスで返却してます
   const voiceText = await speechToText(urlChangeGS(voiceURL)); //音声の文字起こし
   const statusMessage = await setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText);  // uid使ってFirestoreのサブコレクション(Diary)に保存
-  res.send({"status": statusMessage});
+  res.send(statusMessage);
 });
 
 module.exports = router;
