@@ -20,8 +20,8 @@ const firebaseServiceAccount = {
     "universe_domain": process.env.UNIVERSE_DOMAIN,
 }
 
-// const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-const serviceAccount = firebaseServiceAccount;
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+// const serviceAccount = firebaseServiceAccount;
 initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -158,10 +158,14 @@ router.post("/diary", async function (req, res) {
   const voiceURL = req.body.voiceURL; //音声のURLもらう
   const uid = req.body.uid; //uidもらう
 
-  const emotionResult = await imageAnalys(urlChangeGS(imageURL)); // APIに画像のURLを渡し、結果をレスポンスで返却してます
-  const voiceText = await speechToText(urlChangeGS(voiceURL)); //音声の文字起こし
-  const statusMessage = await setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText);  // uid使ってFirestoreのサブコレクション(Diary)に保存
-  res.send(statusMessage);
+  if(imageURL.length > 0 && voiceURL.length > 0 && uid.length > 0){
+    const emotionResult = await imageAnalys(urlChangeGS(imageURL)); // APIに画像のURLを渡し、結果をレスポンスで返却してます
+    const voiceText = await speechToText(urlChangeGS(voiceURL)); //音声の文字起こし
+    const statusMessage = await setDiaryData(uid, emotionResult, imageURL, voiceURL, voiceText);  // uid使ってFirestoreのサブコレクション(Diary)に保存
+    res.send(statusMessage);
+  }else{
+    res.send({"message": `求められているパラメータが不足しています。 imageURL: ${imageURL}, voiceURL: ${voiceURL}, uid: ${uid}`});
+  }
 });
 
 module.exports = router;
