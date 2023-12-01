@@ -20,8 +20,8 @@ const firebaseServiceAccount = {
     "universe_domain": process.env.UNIVERSE_DOMAIN,
 }
 
-// const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
-const serviceAccount = firebaseServiceAccount;
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+// const serviceAccount = firebaseServiceAccount;
 initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -109,12 +109,12 @@ async function speechToText(voiceURL){
       const responses = result.data.results;
       for(let i = 0; i < responses.length; i ++){
         if(i >= 1){
-          resultText = resultText + "。\n" + responses[i]["alternatives"][0]["transcript"];
+          resultText = resultText + "。\\n" + responses[i]["alternatives"][0]["transcript"];
         }else{
           resultText = responses[i]["alternatives"][0]["transcript"];
         }
       }
-      resultText = resultText + "。\n";
+      resultText = resultText + "。\\n";
       return resultText;
     }else{
       return "データがありません"
