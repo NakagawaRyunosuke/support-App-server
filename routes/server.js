@@ -109,12 +109,12 @@ async function speechToText(voiceURL){
       const responses = result.data.results;
       for(let i = 0; i < responses.length; i ++){
         if(i >= 1){
-          resultText = resultText + "。" + responses[i]["alternatives"][0]["transcript"];
+          resultText = resultText + "。\n" + responses[i]["alternatives"][0]["transcript"];
         }else{
           resultText = responses[i]["alternatives"][0]["transcript"];
         }
       }
-      resultText = resultText + "。";
+      resultText = resultText + "。\n";
       return resultText;
     }else{
       return "データがありません"
